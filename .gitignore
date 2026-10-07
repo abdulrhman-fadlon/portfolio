@@ -1,0 +1,7 @@
+# Local-only files — never uploaded with the site
+admin_config.json
+profile-original.png
+__pycache__/
+journey/
+.DS_Store
+Thumbs.db

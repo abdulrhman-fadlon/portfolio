@@ -1,0 +1,2092 @@
+/* ==========================================================================
+   ABDULRHMAN REZK — ML ENGINEER PORTFOLIO
+   styles.css — the single stylesheet (design system + components + dark mode)
+   ========================================================================== */
+
+/* ==========================================================================
+   ABDULRHMAN REZK — ML ENGINEER PORTFOLIO
+   Design System: Full-Width Viewport, Larger Typography, Proper Dark Mode
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+/* Light Mode Defaults — on :root so they cascade everywhere */
+:root {
+  --bg-page: #f8f8f5;
+  --bg-surface: #f0f0ea;
+  --bg-surface-subtle: #f5f5ef;
+
+  --border-color: #1a1a1a;
+  --border-color-dim: #d8d8d0;
+
+  --text-main: #141414;
+  --text-muted: #4a4a4a;
+  --text-dim: #6e6e6e;
+
+  --inverted-bg: #141414;
+  --inverted-text: #f8f8f5;
+
+  --accent-color: #2b7a5a;
+
+  --font-mono: 'JetBrains Mono', 'Space Mono', monospace;
+  --font-editorial: 'Space Mono', 'JetBrains Mono', monospace;
+}
+
+/* Dark Mode — override EVERY variable on html so the cascade works site-wide */
+html.dark-mode {
+  --bg-page: #0f1218;
+  --bg-surface: #171c24;
+  --bg-surface-subtle: #1c2230;
+
+  --border-color: #c9d1d9;
+  --border-color-dim: #2e3646;
+
+  --text-main: #f0f6fc;
+  --text-muted: #c1cad6;
+  --text-dim: #8b949e;
+
+  --inverted-bg: #f0f6fc;
+  --inverted-text: #0f1218;
+
+  --accent-color: #58a6ff;
+}
+
+/* Base Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 18px;
+  height: 100%;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+  height: 100%;
+  width: 100vw;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  line-height: 1.65;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--inverted-bg);
+  color: var(--inverted-text);
+}
+
+/* Full-Viewport Screen (1 Section = 1 Full Screen) */
+.screen-section {
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 80px 0 24px 0;
+  background-color: var(--bg-page);
+  transition: background-color 0.3s ease;
+}
+
+/* Content Container */
+.section-container {
+  width: 100%;
+  max-width: 1300px;
+  padding: 0 60px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+/* ─── Fixed Global Header ──────────────────────────────────────── */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  background-color: var(--bg-page);
+  border-bottom: 1.5px solid var(--border-color-dim);
+  padding: 16px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.header-brand {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-main);
+}
+
+.status-indicator {
+  width: 9px;
+  height: 9px;
+  background-color: var(--inverted-bg);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.header-socials {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.header-social-link {
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.header-social-link:hover {
+  transform: translateY(-2px);
+}
+
+/* Brand hover colors — LinkedIn blue / GitHub dark gray (light theme) */
+.header-social-link--linkedin:hover {
+  color: #0a66c2;
+}
+
+.header-social-link--github:hover {
+  color: #24292f;
+}
+
+.header-social-link svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* Navigation */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.site-nav a {
+  color: var(--text-main);
+  padding: 4px 8px;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.site-nav a:hover,
+.site-nav a.active {
+  background-color: var(--inverted-bg);
+  color: var(--inverted-text);
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  background: transparent;
+  border: 1.5px solid var(--border-color);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-main);
+  padding: 6px 14px;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  background-color: var(--inverted-bg);
+  color: var(--inverted-text);
+  border-color: var(--inverted-bg);
+}
+
+/* ─── Right-Side Dot Nav ──────────────────────────────────────── */
+.side-screen-tracker {
+  position: fixed;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 999;
+}
+
+.screen-dot {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--border-color);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.screen-dot.active {
+  background: var(--inverted-bg);
+  transform: scale(1.3);
+}
+
+/* Hover label — the dots are the navigator for ALL sections */
+.screen-dot::after {
+  content: attr(data-label);
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%) translateX(4px);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  background-color: var(--bg-page);
+  border: 1.5px solid var(--border-color);
+  box-shadow: 3px 3px 0px var(--border-color);
+  padding: 3px 8px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.screen-dot:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* ─── Section Tag Label ────────────────────────────────────────── */
+.section-tag {
+  font-size: 1rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* ─── Reveal Animations ────────────────────────────────────────── */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-item.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Progressive reveal — entries that draw ONE per scroll gesture
+   (Education, Work Experience). Not touched by the auto observer. */
+.reveal-step {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-step.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Buttons ──────────────────────────────────────────────────── */
+.cmd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--inverted-bg);
+  color: var(--inverted-text);
+  padding: 14px 28px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 1.5px solid var(--inverted-bg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  text-decoration: none;
+}
+
+.cmd-btn:hover {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  border-color: var(--border-color);
+  box-shadow: 4px 4px 0px var(--border-color);
+  transform: translate(-1px, -1px);
+}
+
+.cmd-btn-secondary {
+  background-color: transparent;
+  color: var(--text-main);
+  border-color: var(--border-color);
+}
+
+/* Lock page scroll while a modal is open */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  html { font-size: 15px; }
+  .site-header { padding: 12px 20px; flex-wrap: wrap; gap: 10px; }
+  .site-nav { gap: 12px; font-size: 0.75rem; }
+  .section-container { padding: 0 20px; }
+}
+
+/* ==========================================================================
+   PART 2 — COMPONENTS
+   ========================================================================== */
+
+/* ==========================================================================
+   ABDULRHMAN REZK — ML ENGINEER PORTFOLIO
+   Components: Hero, About, Projects, Skills (Redesigned), Contact
+   ========================================================================== */
+
+/* ─────────────────────────────────────────────────────────────────────
+   1. HERO SECTION
+   ───────────────────────────────────────────────────────────────────── */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.hero-headline {
+  font-size: clamp(2.8rem, 5.8vw, 4.6rem);
+  font-weight: 700;
+  line-height: 1.13;
+  margin-bottom: 18px;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
+}
+
+.highlight-inverted {
+  display: inline-block;
+  background-color: var(--inverted-bg);
+  color: var(--inverted-text);
+  padding: 3px 16px 5px 14px;
+  margin: 4px 0;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.hero-role {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 22px;
+}
+
+.hero-role strong {
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.hero-lead {
+  font-size: 1.1rem;
+  color: var(--text-main);
+  line-height: 1.75;
+  max-width: 700px;
+  margin-bottom: 34px;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.hero-image-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.profile-frame {
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 1 / 1.15;
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-surface);
+  overflow: hidden;
+  box-shadow: 8px 8px 0px var(--border-color);
+}
+
+.profile-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 45%;
+  filter: grayscale(100%) contrast(110%);
+}
+
+.profile-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.profile-fallback svg {
+  width: 68px;
+  height: 68px;
+  stroke: var(--text-main);
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   2. ABOUT SECTION
+   ───────────────────────────────────────────────────────────────────── */
+.about-content {
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.about-content h2 {
+  font-size: 2.2rem;
+  margin-bottom: 18px;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+}
+
+.about-content h2 span {
+  text-decoration: underline;
+  text-underline-offset: 7px;
+}
+
+.about-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.about-lines p {
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.about-lines strong {
+  color: var(--text-main);
+}
+
+/* About facts — 2×2 grid of positioning blocks */
+.about-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 22px;
+  margin-bottom: 20px;
+}
+
+.about-fact {
+  border-left: 3px solid var(--border-color);
+  padding-left: 14px;
+}
+
+.fact-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  margin-bottom: 5px;
+}
+
+.about-fact p {
+  font-size: 0.94rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+/* USP details — dedicated editable spot */
+.usp-details-box {
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-surface);
+  box-shadow: 5px 5px 0px var(--border-color);
+  padding: 14px 18px;
+  margin-bottom: 18px;
+}
+
+.usp-details-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.usp-details-box ul {
+  list-style: none;
+}
+
+.usp-details-box li {
+  font-size: 0.9rem;
+  color: var(--text-main);
+  padding-left: 18px;
+  position: relative;
+  margin-bottom: 5px;
+  line-height: 1.5;
+}
+
+.usp-details-box li::before {
+  content: ">";
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.about-story-line {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  border-left: 3px solid var(--border-color);
+  padding-left: 14px;
+  margin-bottom: 4px;
+}
+
+.about-story-line strong {
+  color: var(--text-main);
+}
+
+.about-numbers-line {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-top: 16px;
+  font-weight: 600;
+}
+
+.about-numbers-line a {
+  color: var(--text-main);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  white-space: nowrap;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   3. PROJECTS SECTION
+   ───────────────────────────────────────────────────────────────────── */
+.projects-header {
+  margin-bottom: 26px;
+  text-align: center;
+}
+
+.projects-header h2 {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.projects-header p {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+}
+
+/* Flex so the thin ">" strip always sits right after the LAST card,
+   no matter how many projects exist */
+.projects-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+  align-items: stretch;
+}
+
+.projects-grid .project-card {
+  flex: 1 1 0;
+  min-width: 0;
+  /* (100% - 72px strip - 78px gaps - 4px slack) / 3 — the slack avoids
+     sub-pixel rounding that would push the strip to a new row */
+  max-width: calc((100% - 154px) / 3);
+}
+
+/* Thin expander strip — opens the all-projects browser */
+.projects-more-card {
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-surface-subtle);
+  box-shadow: 5px 5px 0px var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-main);
+  min-height: 120px;
+  /* exact strip size: sits beside the 3rd card in the same row */
+  flex: 0 0 72px;
+  width: 72px;
+  min-width: 72px;
+  align-self: stretch;
+  user-select: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.projects-more-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0px var(--border-color);
+  background-color: var(--bg-surface);
+}
+
+.project-card {
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-page);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 5px 5px 0px var(--border-color);
+}
+
+.project-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0px var(--border-color);
+}
+
+.project-card-header {
+  padding: 10px 18px;
+  border-bottom: 1.5px solid var(--border-color);
+  background-color: var(--bg-surface);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.project-badge {
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-page);
+  font-size: 0.7rem;
+  color: var(--text-main);
+}
+
+.project-card-body {
+  padding: 18px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-card-title {
+  font-size: 1.12rem;
+  margin-bottom: 10px;
+  line-height: 1.35;
+  color: var(--text-main);
+}
+
+.project-card-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 14px;
+  flex: 1;
+}
+
+.project-roi-strip {
+  background-color: var(--bg-surface);
+  border-left: 3px solid var(--border-color);
+  padding: 8px 12px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: var(--text-main);
+}
+
+.project-tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.tech-tag {
+  font-size: 0.74rem;
+  padding: 3px 8px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color-dim);
+  color: var(--text-main);
+}
+
+.project-card-footer {
+  padding: 12px 18px;
+  border-top: 1px solid var(--border-color-dim);
+  background-color: var(--bg-surface-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.case-study-btn {
+  background: none;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-main);
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.case-study-btn:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Demo link — in project footers and the detail modal header */
+.demo-btn {
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-main);
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 1px;
+  transition: opacity 0.15s ease;
+}
+
+.demo-btn:hover {
+  opacity: 0.7;
+}
+
+/* Outer grid shows the first 3 cards + the ">" strip — the rest live
+   inside the all-projects popup only */
+.projects-grid .project-card:nth-child(n+4) {
+  display: none;
+}
+
+/* Per-project image — outer cards keep the original colors exactly as sent;
+   inside the all-projects popup they switch to the black & white theme */
+.project-card-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.projects-modal-body .project-card-image {
+  filter: grayscale(100%) contrast(105%);
+}
+
+/* On short laptops, outer-grid cards drop their images to fit the screen
+   (the all-projects popup always shows them) */
+@media (min-width: 991px) and (max-height: 940px) {
+  .projects-grid .project-card-image {
+    display: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   4. SKILLS SECTION — REDESIGNED
+   Two rows: top row 2 featured cards (wider), bottom row 2 cards
+   Each card has a big category number, name, description and tags
+   ───────────────────────────────────────────────────────────────────── */
+.skills-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.skills-header h2 {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.skills-header p {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+}
+
+.skills-bento {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.skill-card {
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-page);
+  padding: 26px 22px;
+  box-shadow: 5px 5px 0px var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.skill-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0px var(--border-color);
+}
+
+.skill-card-num {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--border-color-dim);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.skill-card h3 {
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--text-main);
+  border-bottom: 1.5px solid var(--border-color-dim);
+  padding-bottom: 10px;
+}
+
+.skill-card p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  flex: 1;
+}
+
+.skill-pill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.skill-pill {
+  font-size: 0.78rem;
+  padding: 4px 10px;
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-color);
+  color: var(--text-main);
+  font-weight: 600;
+  position: relative;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+/* Hover: pill inverts + strength popup with a percentage bar */
+.skill-pill:hover {
+  background-color: var(--inverted-bg);
+  color: var(--inverted-text);
+  transform: translateY(-2px);
+}
+
+.skill-pill::before {
+  content: "";
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 58px;
+  height: 6px;
+  border: 1.5px solid var(--border-color);
+  background: linear-gradient(
+    to right,
+    var(--accent-color) var(--level, 0%),
+    var(--bg-page) var(--level, 0%)
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 21;
+}
+
+.skill-pill::after {
+  content: attr(data-level) "%";
+  position: absolute;
+  bottom: calc(100% + 16px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  border: 1.5px solid var(--border-color);
+  box-shadow: 3px 3px 0px var(--border-color);
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 22;
+}
+
+.skill-pill:hover::before,
+.skill-pill:hover::after {
+  opacity: 1;
+}
+
+.skill-pill:hover::after {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   5. CONTACT SECTION — Live Terminal Log + Form
+   ───────────────────────────────────────────────────────────────────── */
+.contact-grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 52px;
+  align-items: start;
+  width: 100%;
+}
+
+.contact-left-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-headline {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 700;
+  margin-bottom: 14px;
+  line-height: 1.2;
+  color: var(--text-main);
+}
+
+.contact-headline span {
+  text-decoration: underline;
+  text-underline-offset: 7px;
+}
+
+.contact-sub {
+  font-size: 0.98rem;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+  line-height: 1.65;
+}
+
+/* Live System Log Terminal */
+.terminal-log-panel {
+  border: 2px solid var(--border-color);
+  background-color: #0d1117;
+  color: #c9d1d9;
+  box-shadow: 6px 6px 0px var(--border-color);
+  font-family: var(--font-mono);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.terminal-log-header {
+  background-color: #161b22;
+  border-bottom: 1px solid #30363d;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.76rem;
+  color: #8b949e;
+}
+
+.terminal-dots-row {
+  display: flex;
+  gap: 6px;
+}
+
+.terminal-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: #30363d;
+}
+
+.terminal-log-body {
+  padding: 16px 14px;
+  font-size: 0.82rem;
+  line-height: 1.65;
+  min-height: 120px;
+}
+
+.log-line {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.log-tag { color: #58a6ff; font-weight: 700; user-select: none; }
+.log-val { color: #7ee787; }
+.log-dim { color: #8b949e; }
+
+.email-copy-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-color);
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.email-copy-btn {
+  background: var(--inverted-bg);
+  color: var(--inverted-text);
+  border: none;
+  padding: 5px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.email-copy-btn:hover { opacity: 0.8; }
+
+/* Contact Form */
+.clean-contact-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background-color: var(--bg-surface-subtle);
+  border: 2px solid var(--border-color);
+  padding: 28px;
+  box-shadow: 6px 6px 0px var(--border-color);
+}
+
+.form-row-duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.clean-input, .clean-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border-color);
+  background-color: var(--bg-page);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.clean-input:focus, .clean-textarea:focus {
+  border-color: var(--text-main);
+  box-shadow: 3px 3px 0px var(--border-color);
+}
+
+.clean-textarea {
+  min-height: 100px;
+  resize: none;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #2b7a5a;
+  color: #ffffff;
+  border: 2px solid var(--border-color);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 3px 3px 0px var(--border-color);
+}
+
+.submit-btn:hover {
+  background-color: #236348;
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0px var(--border-color);
+}
+
+/* Small direct-email link under the form */
+.mail-fallback-btn {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: color 0.15s ease;
+}
+
+.mail-fallback-btn:hover {
+  color: var(--text-main);
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   5.5 EXTRA SECTIONS — USP / Education / Work / Services / Certs / Testi
+   ───────────────────────────────────────────────────────────────────── */
+
+/* Generic section header (used by the new full-screen sections) */
+.section-head {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.section-head h2 {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.section-head p {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+}
+
+.section-note {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-weight: 600;
+  margin-top: 22px;
+}
+
+/* USP cards */
+.usp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 26px;
+}
+
+.usp-card {
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-page);
+  padding: 24px 22px;
+  box-shadow: 5px 5px 0px var(--border-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.usp-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0px var(--border-color);
+}
+
+.usp-num {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--border-color-dim);
+  line-height: 1;
+  margin-bottom: 12px;
+  letter-spacing: -0.04em;
+}
+
+.usp-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid var(--border-color-dim);
+  color: var(--text-main);
+}
+
+.usp-card p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Timeline (Education + Work Experience)
+   Each entry carries its own line segment + dot — no empty line when
+   entries are still hidden by the progressive reveal. */
+.timeline {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.timeline-item {
+  position: relative;
+  border-left: 2px solid var(--border-color);
+  padding-left: 26px;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  background-color: var(--inverted-bg);
+  border: 2px solid var(--border-color);
+}
+
+.timeline-item h3 {
+  font-size: 1.12rem;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.timeline-meta {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.timeline-item p {
+  font-size: 0.94rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* No-experience badge (Work section) — static, no reveal animation */
+.no-exp-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.no-exp-icon {
+  width: 22px;
+  height: 22px;
+  stroke: var(--text-main);
+  flex-shrink: 0;
+}
+
+.no-exp-row p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+/* Hint for progressive sections: "keep scrolling, entries below" */
+.scroll-hint {
+  text-align: center;
+  margin-top: 28px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+
+/* Services */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.service-card {
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-surface-subtle);
+  padding: 24px 22px;
+  box-shadow: 5px 5px 0px var(--border-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.service-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0px var(--border-color);
+}
+
+.service-num {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.service-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid var(--border-color-dim);
+  color: var(--text-main);
+}
+
+.service-card p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Certificates — unified template with image slot */
+.certs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.cert-card {
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-page);
+  box-shadow: 5px 5px 0px var(--border-color);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cert-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0px var(--border-color);
+}
+
+.cert-image {
+  aspect-ratio: 4 / 3;
+  background-color: var(--bg-surface);
+  border-bottom: 2px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--text-dim);
+  width: 100%;
+  object-fit: cover;
+}
+
+.cert-image svg {
+  width: 52px;
+  height: 52px;
+  stroke: var(--text-dim);
+}
+
+.cert-image span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+img.cert-image {
+  height: auto;
+  filter: grayscale(100%) contrast(105%);
+}
+
+.cert-body {
+  padding: 14px 16px;
+}
+
+.cert-body h3 {
+  font-size: 1rem;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.cert-meta {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+/* Dashed 6th tile — opens the all-certificates popup */
+.certs-more-tile {
+  border: 2px dashed var(--border-color-dim);
+  background-color: transparent;
+  color: var(--text-dim);
+  opacity: 0.75;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.certs-more-tile:hover {
+  border-color: var(--border-color);
+  color: var(--text-main);
+  opacity: 1;
+  transform: translate(-2px, -2px);
+}
+
+.certs-more-plus {
+  font-size: 2.4rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.certs-more-tile span:last-child {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+/* All-certificates popup — a wide strip where certificates MOVE
+   like the testimonials ticker (auto-scroll + hover pause + drag) */
+.certs-modal-content {
+  max-width: 1000px;
+}
+
+.certs-modal-body {
+  overflow: hidden;
+  padding: 18px;
+}
+
+.certs-ticker-viewport {
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
+  padding: 4px 0;
+}
+
+.certs-ticker-viewport.dragging {
+  cursor: grabbing;
+}
+
+.certs-ticker-track {
+  display: flex;
+  gap: 18px;
+  width: max-content;
+  will-change: transform;
+}
+
+.certs-ticker-track .cert-card {
+  width: 280px;
+  flex: 0 0 280px;
+}
+
+/* Testimonials — bounded ticker: auto-scrolls slowly, pauses on hover, drag to move */
+.testi-viewport {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  padding: 6px 0;
+}
+
+.testi-viewport.dragging {
+  cursor: grabbing;
+}
+
+.testi-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  will-change: transform;
+}
+
+.testi-card {
+  width: 360px;
+  flex: 0 0 360px;
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-surface-subtle);
+  padding: 22px;
+  box-shadow: 5px 5px 0px var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.testi-card-dim {
+  border-style: dashed;
+  box-shadow: none;
+  opacity: 0.65;
+}
+
+.testi-quote {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-main);
+  flex: 1;
+}
+
+.testi-author {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border-color-dim);
+  padding-top: 12px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   6. PROJECT CASE STUDY MODAL
+   ───────────────────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Detail modal sits above the all-projects modal when both are open */
+#project-modal {
+  z-index: 100001;
+}
+
+.modal-content {
+  background-color: var(--bg-page);
+  border: 3px solid var(--border-color);
+  width: 100%;
+  max-width: 950px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.4);
+}
+
+.modal-header {
+  background-color: var(--bg-surface);
+  border-bottom: 2px solid var(--border-color);
+  padding: 14px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.modal-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.modal-badge {
+  border: 1.5px solid var(--border-color);
+  background-color: var(--bg-page);
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: 1.5px solid var(--border-color);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 4px 12px;
+  cursor: pointer;
+  color: var(--text-main);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.modal-overview-text {
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-color);
+  border-left: 4px solid var(--border-color);
+  padding: 12px 16px;
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.modal-note-box {
+  background-color: var(--bg-surface);
+  border-left: 3px solid var(--border-color);
+  padding: 12px 16px;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+/* Detail modal — redesigned project page layout */
+.modal-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.modal-image-slot {
+  aspect-ratio: 21 / 8;
+  background-color: var(--bg-surface);
+  border: 2px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.modal-image-slot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-image-slot svg {
+  width: 46px;
+  height: 46px;
+  stroke: var(--text-dim);
+}
+
+.modal-image-slot span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+img.modal-image-slot {
+  object-fit: cover;
+  filter: grayscale(100%) contrast(105%);
+}
+
+/* How-it-works: numbered steps instead of a terminal diagram */
+.flow-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.flow-step {
+  border: 1.5px solid var(--border-color);
+  background-color: var(--bg-surface);
+  padding: 12px;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--text-main);
+}
+
+.step-num {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--inverted-bg);
+  color: var(--inverted-text);
+  font-weight: 700;
+  font-size: 0.72rem;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 900px) {
+  .flow-steps { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 560px) {
+  .flow-steps { grid-template-columns: 1fr; }
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.detail-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-col .modal-section-title {
+  margin-top: 10px;
+}
+
+.detail-col .modal-section-title:first-child {
+  margin-top: 0;
+}
+
+.modal-close-btn:hover {
+  background-color: var(--inverted-bg);
+  color: var(--inverted-text);
+}
+
+.modal-body {
+  padding: 26px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-size: 0.94rem;
+  color: var(--text-main);
+  /* Custom scrollbar — long square bar, no rounding */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) var(--bg-surface);
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 12px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background-color: var(--bg-surface);
+  border-left: 1.5px solid var(--border-color-dim);
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 0;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-main);
+}
+
+/* All-projects modal — same cards, two columns, scrollable */
+.projects-modal-content {
+  max-width: 1150px;
+  max-height: 88vh;
+}
+
+.projects-modal-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+  padding: 24px;
+}
+
+.modal-section-title {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  border-bottom: 1px dashed var(--border-color-dim);
+  padding-bottom: 5px;
+  margin-bottom: 8px;
+  color: var(--text-dim);
+}
+
+.arch-box {
+  background-color: #0d1117;
+  color: #7ee787;
+  padding: 16px;
+  border: 1px solid #30363d;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  overflow-x: auto;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 990px) {
+  .hero-grid, .skills-bento, .contact-grid-layout,
+  .usp-grid, .services-grid, .certs-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .projects-grid .project-card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+  .hero-image-wrapper { display: none; }
+  .projects-more-card {
+    min-height: 0;
+    height: 64px;
+    width: 100%;
+    flex: 1 1 100%;
+  }
+  .testi-card {
+    width: 300px;
+    flex: 0 0 300px;
+  }
+}
+
+@media (max-width: 900px) {
+  .projects-modal-body {
+    grid-template-columns: 1fr;
+  }
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   PART 3 — DARK MODE OVERRIDES
+   ========================================================================== */
+
+/* ==========================================================================
+   ABDULRHMAN REZK — ML ENGINEER PORTFOLIO
+   dark-mode.css — Extra component overrides on top of the :root cascade
+   (The main variables are now on html.dark-mode in main.css)
+   ========================================================================== */
+
+/* Form inputs in dark mode */
+html.dark-mode .clean-input,
+html.dark-mode .clean-textarea {
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  border-color: #374151;
+}
+
+html.dark-mode .clean-input::placeholder,
+html.dark-mode .clean-textarea::placeholder {
+  color: var(--text-dim);
+}
+
+html.dark-mode .clean-input:focus,
+html.dark-mode .clean-textarea:focus {
+  background-color: var(--bg-surface-subtle);
+  border-color: var(--text-main);
+}
+
+/* Submit button keeps its green regardless of mode */
+html.dark-mode .submit-btn {
+  background-color: #2b7a5a;
+  border-color: var(--border-color);
+  color: #ffffff;
+}
+
+html.dark-mode .submit-btn:hover {
+  background-color: #236348;
+}
+
+/* Contact form background */
+html.dark-mode .clean-contact-form {
+  background-color: var(--bg-surface);
+}
+
+/* Terminal log stays dark in both modes — no override needed */
+
+/* Email copy button */
+html.dark-mode .email-copy-btn {
+  background-color: var(--inverted-bg);
+  color: var(--inverted-text);
+}
+
+/* Project card footer */
+html.dark-mode .project-card-footer {
+  background-color: var(--bg-surface);
+}
+
+/* Skill card */
+html.dark-mode .skill-card {
+  background-color: var(--bg-surface);
+}
+
+/* Big card numbers read white in dark mode */
+html.dark-mode .skill-card-num {
+  color: var(--text-main);
+}
+
+/* GitHub icon keeps its normal (white) color on hover in dark mode */
+html.dark-mode .header-social-link--github:hover {
+  color: var(--text-main);
+}
+
+/* Highlight inverted name badge */
+html.dark-mode .highlight-inverted {
+  background-color: var(--inverted-bg);
+  color: var(--inverted-text);
+}
+
+/* Modal background */
+html.dark-mode .modal-content {
+  background-color: var(--bg-page);
+}
+
+html.dark-mode .modal-header {
+  background-color: var(--bg-surface);
+}
+
+/* ROI strips & project headers */
+html.dark-mode .project-roi-strip,
+html.dark-mode .project-card-header {
+  background-color: var(--bg-surface);
+}
+
+html.dark-mode .project-card {
+  background-color: var(--bg-page);
+}
+
+/* Site header background */
+html.dark-mode .site-header {
+  background-color: var(--bg-page);
+}
+
+/* ==========================================================================
+   PART 4 — MOBILE LAYOUT (<=990px)
+   A dedicated phone experience, different from desktop on purpose:
+   - natural scrolling (no full-screen snap, no wheel hijack)
+   - burger menu with ALL sections (replaces header nav + side dots)
+   - stacked sections that grow with their content
+   - tap shows the skill % tooltip (no hover on touch)
+   - modals become near full-screen sheets
+   The JS scroll controller disables itself at this width (see app.js).
+   ========================================================================== */
+
+/* Burger button — hidden on desktop */
+.menu-btn {
+  display: none;
+  background: transparent;
+  border: 1.5px solid var(--border-color);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-main);
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.menu-btn:active {
+  background-color: var(--inverted-bg);
+  color: var(--inverted-text);
+}
+
+/* Full-screen menu */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  background-color: var(--bg-page);
+  padding: 92px 26px 30px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  overflow-y: auto;
+}
+
+.mobile-menu.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.menu-close {
+  align-self: flex-end;
+  background: transparent;
+  border: 1.5px solid var(--border-color);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 5px 12px;
+  cursor: pointer;
+  color: var(--text-main);
+  font-size: 0.85rem;
+  margin-bottom: 18px;
+}
+
+.mobile-menu a {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  text-decoration: none;
+  padding: 14px 10px;
+  border-bottom: 1.5px solid var(--border-color-dim);
+}
+
+.mobile-menu a:active {
+  background-color: var(--inverted-bg);
+  color: var(--inverted-text);
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+@media (max-width: 990px) {
+  html { font-size: 14.5px; }
+
+  /* Natural scrolling instead of full-screen snapping */
+  body { scroll-snap-type: none; }
+
+  .screen-section {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100svh;
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
+    padding: 92px 0 46px 0;
+  }
+
+  .section-container {
+    height: auto;
+    padding: 0 22px;
+  }
+
+  /* Header: brand + theme + burger (nav links and socials move to the menu) */
+  .site-nav { display: none; }
+  .header-socials { display: none; }
+  .menu-btn { display: inline-flex; }
+  .side-screen-tracker { display: none; }
+
+  /* Tighter type scale */
+  .hero-headline { font-size: clamp(2.2rem, 10.5vw, 3.1rem); }
+  .about-content h2,
+  .section-head h2,
+  .skills-header h2,
+  .projects-header h2 { font-size: 1.65rem; }
+  .section-tag { font-size: 0.85rem; letter-spacing: 0.26em; }
+
+  /* About lines breathe on small screens */
+  .about-lines p { font-size: 0.94rem; }
+
+  /* Cards get comfortable padding */
+  .skill-card, .usp-card, .service-card { padding: 20px 18px; }
+
+  /* Ticker: horizontal drag only — vertical swipes still scroll the page */
+  .testi-viewport { touch-action: pan-y; }
+
+  /* Tap shows the skill percentage (no hover on touch) */
+  .skill-pill:active::before,
+  .skill-pill:active::after { opacity: 1; }
+  .skill-pill:active { transform: none; }
+
+  /* Modals become near full-screen sheets */
+  .modal-overlay { padding: 10px; }
+  .modal-content { max-height: 94svh; }
+  .modal-body { padding: 16px; }
+  .projects-modal-body { padding: 14px; }
+  .modal-image-slot { aspect-ratio: 16 / 8; }
+}
