@@ -11,12 +11,24 @@ Run:            python admin.py
 Validate only:  python admin.py --check
 """
 
-import getpass
 import json
 import os
+import re
 import subprocess
 import sys
 import time
+
+VALID_TOKEN = re.compile(r"^[A-Za-z0-9_]{30,}$")
+
+
+def sanitize_token(tok):
+    """Keep only URL-safe characters — pasting into a hidden prompt on
+    Windows can inject control characters (\\x7f) that break the URL."""
+    return "".join(c for c in tok if re.match(r"[A-Za-z0-9_]", c))
+
+
+def clear_screen():
+    os.system("cls" if os.name == "nt" else "clear")
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(BASE, "data.js")
@@ -563,16 +575,43 @@ def publish():
         print("  5. IMPORTANT: tick the first checkbox 'repo' — that is")
         print("     the permission that lets me upload for you")
         print("  6. 'Generate token' → COPY it (starts with ghp_)")
-        print("  7. Paste it below — hidden while typing")
+        print("  7. Paste it below. NOTE: it will be VISIBLE while you type —")
+        print("     that is fine, it never leaves this computer.")
         print("  " + "─" * 50)
-        token = getpass.getpass("  Paste token (input hidden): ").strip()
-        while not token:
-            print("   x The token is what gives me permission to push.")
-            token = getpass.getpass("  Paste token (input hidden): ").strip()
+        token = sanitize_token(ask("  Paste token", "", required=True))
+        while not VALID_TOKEN.match(token):
+            print("   x That token looks damaged (too short or odd characters).")
+            print("     Copy it again from GitHub: it is 40 characters, starts with ghp_")
+            token = sanitize_token(ask("  Paste token", "", required=True))
         cfg = {"username": username, "repo": repo, "branch": branch, "token": token}
         save_config(cfg)
         print("\n+ Saved. You will not be asked again "
               "(delete admin_config.json to redo this).\n")
+    else:
+        # An old saved token may contain broken characters from a bad paste
+        clean = sanitize_token(cfg.get("token", ""))
+        if clean != cfg.get("token", ""):
+            cfg["token"] = clean
+            save_config(cfg)
+        tok = cfg.get("token", "")
+        # A classic token is EXACTLY 40 chars; a damaged paste duplicates chunks
+        looks_broken = not VALID_TOKEN.match(tok) or (tok.startswith("ghp_") and len(tok) != 40)
+        if looks_broken:
+            print(f"x The saved token looks damaged (length {len(tok)} —")
+            print("  a classic token is exactly 40 characters).")
+            print("  Make a fresh one at github.com/settings/tokens and paste it")
+            print("  below — visible input is fine, it never leaves this PC.")
+            tok = ""
+            while True:
+                tok = sanitize_token(ask("  Paste fresh token", "", required=True))
+                ok = VALID_TOKEN.match(tok) and not (tok.startswith("ghp_") and len(tok) != 40)
+                if ok:
+                    break
+                print(f"   x Still looks wrong (length {len(tok)}).")
+                print("     Copy the FULL token: 40 characters starting with ghp_")
+            cfg["token"] = tok
+            save_config(cfg)
+            print("+ Fresh token saved.")
 
     protect_photo()
     ensure_gitignore()
@@ -612,11 +651,26 @@ def publish():
         print(f"  https://{cfg['username']}.github.io/{cfg['repo']}/")
         if cfg["repo"] == cfg["username"] + ".github.io":
             print(f"  (clean link: https://{cfg['username']}.github.io/)")
+        return
+
+    err = (push.stderr or push.stdout or "")
+    print("x Push failed. Git said:")
+    print("  " + err.strip()[:600])
+
+    # The GitHub repo was created WITH files (README) → first push is rejected
+    if "rejected" in err or "fetch first" in err:
+        print("\n  The GitHub repo already has files (like a README).")
+        if ask_yn("Replace them with your local site? (the remote README is replaced)", True):
+            force = run_git(["push", "-f", url, cfg["branch"]], timeout=180)
+            if force.returncode == 0:
+                print("+ PUBLISHED (overwritten)! Your site updates in about one minute at:")
+                print(f"  https://{cfg['username']}.github.io/{cfg['repo']}/")
+            else:
+                print("x Force push failed too:")
+                print("  " + (force.stderr or force.stdout or "").strip()[:600])
     else:
-        print("x Push failed. Git said:")
-        print("  " + (push.stderr or push.stdout or "").strip()[:500])
         print("  Common fixes: wrong token (make a new one with 'repo' scope),")
-        print("  wrong username/repo, or the repo does not exist yet (create it empty on github.com).")
+        print("  wrong username/repo, or check your internet connection.")
 
 
 # ============================================================
@@ -659,6 +713,7 @@ def main():
         check(load_data())
         return
 
+    clear_screen()
     print("=" * 55)
     print("  PORTFOLIO ADMIN — edit by answering questions")
     print("  (Ctrl+C anytime — nothing breaks)")
@@ -702,18 +757,25 @@ def main():
             elif choice == "11":
                 show_projects(data)
                 pause()
-            elif choice == "p": publish()
+            elif choice == "p":
+                publish()
+                pause()
             elif choice == "0":
                 print("Bye — your site is whatever data.js says it is.")
                 return
             else:
                 print("x Pick a number from the list.")
 
+            # clean slate for the next menu round
+            clear_screen()
+
         except KeyboardInterrupt:
-            print("\n(Back to menu — nothing was lost; saves happen instantly)")
+            clear_screen()
+            print("(Back to menu — nothing was lost; saves happen instantly)")
         except Exception as e:
             print(f"\nx Something went wrong: {type(e).__name__}: {e}")
             print("  Nothing was saved for that step — your data.js is safe.")
+            pause()
 
 
 if __name__ == "__main__":
