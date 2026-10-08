@@ -331,16 +331,6 @@ window.SITE_DATA = {
       "title": "[Certificate name]",
       "meta": "[Issuer] · [Year]",
       "image": null
-    },
-    {
-      "title": "[Certificate name]",
-      "meta": "[Issuer] · [Year]",
-      "image": null
-    },
-    {
-      "title": "[Certificate name]",
-      "meta": "[Issuer] · [Year]",
-      "image": null
     }
   ],
   "testimonials": [

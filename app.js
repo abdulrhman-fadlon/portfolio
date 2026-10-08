@@ -249,12 +249,44 @@ document.addEventListener('DOMContentLoaded', () => {
     currentSectionIndex = index;
     sections[index].scrollIntoView({ behavior: 'smooth' });
     updateActiveUI(index);
+    flashDotLabel(index);
+  }
+
+  // Scroll to a section by id — used on mobile where the custom controller
+  // is off. Programmatic on purpose: a native anchor jump can silently fail
+  // right after a fullscreen overlay (mobile menu) closes on some browsers.
+  function scrollToId(id) {
+    const target = document.getElementById(id);
+    if (!target) return false;
+    const startY = window.scrollY;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
+    // Last-resort net: if nothing moved after ~0.6s, jump straight there.
+    setTimeout(() => {
+      if (Math.abs(window.scrollY - startY) < 8) {
+        target.scrollIntoView({ block: 'start' });
+      }
+    }, 600);
+    return true;
   }
 
   function updateActiveUI(index) {
     screenDots.forEach((dot, idx) => dot.classList.toggle('active', idx === index));
     const currentId = sections[index]?.id;
     navLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${currentId}`));
+  }
+
+  // Flash the section name next to its dot whenever a new section becomes
+  // active while scrolling — the name appears, then hides by itself.
+  let dotLabelTimer = null;
+  function flashDotLabel(index) {
+    const dot = screenDots[index];
+    if (!dot) return;
+    screenDots.forEach((d) => d.classList.remove('show-label'));
+    clearTimeout(dotLabelTimer);
+    dot.classList.add('show-label');
+    dotLabelTimer = setTimeout(() => dot.classList.remove('show-label'), 2000);
   }
 
   // ─── Reveal on view (IntersectionObserver) ─────────────────────
@@ -375,9 +407,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelectorAll('.site-nav a, .nav-jump').forEach((link) => {
     link.addEventListener('click', (e) => {
-      if (isMobileLayout()) return; // anchors scroll natively on mobile
+      const id = (link.getAttribute('href') || '').replace('#', '');
+      if (!document.getElementById(id)) return;
       e.preventDefault();
-      const id = link.getAttribute('href').replace('#', '');
+      if (isMobileLayout()) {
+        // Mobile: scroll programmatically — don't rely on native anchor jumps.
+        scrollToId(id);
+        return;
+      }
       const idx = sections.findIndex((s) => s.id === id);
       if (idx !== -1) scrollToSection(idx);
     });
@@ -400,7 +437,12 @@ document.addEventListener('DOMContentLoaded', () => {
     menuBtn?.addEventListener('click', () => setMenu(true));
     document.getElementById('menu-close-btn')?.addEventListener('click', () => setMenu(false));
     mobileMenu.addEventListener('click', (e) => {
-      if (e.target.closest('a')) setMenu(false);
+      const link = e.target.closest('a');
+      if (!link) return;
+      e.preventDefault();
+      const id = (link.getAttribute('href') || '').replace('#', '');
+      setMenu(false);
+      scrollToId(id);
     });
   }
 
