@@ -141,19 +141,19 @@
 
 /* Light Mode Defaults — on :root so they cascade everywhere */
 :root {
-  --bg-page: #f8f8f5;
-  --bg-surface: #f0f0ea;
-  --bg-surface-subtle: #f5f5ef;
+  --bg-page: #faf5e6;
+  --bg-surface: #f2edd8;
+  --bg-surface-subtle: #f7f2e1;
 
   --border-color: #1a1a1a;
-  --border-color-dim: #d8d8d0;
+  --border-color-dim: #d8d2bf;
 
   --text-main: #141414;
   --text-muted: #4a4a4a;
   --text-dim: #6e6e6e;
 
   --inverted-bg: #141414;
-  --inverted-text: #f8f8f5;
+  --inverted-text: #faf5e6;
 
   --accent-color: #2b7a5a;
 
@@ -304,10 +304,26 @@ body {
   color: #24292f;
 }
 
+.header-social-link--whatsapp:hover {
+  color: #25d366;
+}
+
+.header-social-link--phone:hover {
+  color: var(--accent-color);
+}
+
 .header-social-link svg {
   width: 18px;
   height: 18px;
   fill: currentColor;
+}
+
+/* Keep the header on one line on narrower desktops now that the contact
+   icons joined the socials */
+@media (max-width: 1200px) {
+  .site-header { padding: 16px 32px; }
+  .site-nav { gap: 16px; }
+  .header-socials { gap: 14px; }
 }
 
 /* Navigation */
@@ -1210,6 +1226,18 @@ body.modal-open {
 }
 
 .email-copy-btn:hover { opacity: 0.8; }
+
+/* Contact detail rows — phone under email, WhatsApp under phone */
+.phone-copy-row { margin-top: 10px; }
+.email-copy-row a { color: inherit; text-decoration: none; }
+.email-copy-row a:not(.email-copy-btn):hover { text-decoration: underline; text-underline-offset: 4px; }
+
+/* WhatsApp "CHAT" link styled like the COPY button */
+.email-copy-row a.email-copy-btn {
+  display: inline-block;
+  color: var(--inverted-text);
+  text-decoration: none;
+}
 
 /* Contact Form */
 .clean-contact-form {

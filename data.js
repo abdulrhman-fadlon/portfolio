@@ -6,6 +6,7 @@ window.SITE_DATA = {
     "lead": "Final-year CS student building real things: an ML-driven CPU scheduler targeting Linux, an Arduino fire-alert system, and a computer-vision driver-safety system. I build in public — everything here is documented and honest.",
     "photo": "profile.png",
     "email": "abdulrhman.rrs@gmail.com",
+    "phone": "01070272690",
     "linkedin": "https://www.linkedin.com/in/abdulrhman-rezk",
     "github": "https://github.com/abdulrhman-fadlon",
     "logStatus": "OPEN TO — internships · junior roles · freelance",

@@ -41,6 +41,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('social-linkedin').href = p.linkedin;
     document.getElementById('social-github').href = p.github;
     document.getElementById('contact-email').textContent = p.email;
+    const phoneEl = document.getElementById('contact-phone');
+    if (phoneEl && p.phone) {
+      phoneEl.textContent = p.phone;
+      phoneEl.href = 'tel:' + p.phone.replace(/^0/, '+20');
+    }
+    // WhatsApp — wa.me deep link on the same number (or a p.whatsapp override)
+    const waNumber = String(p.whatsapp || p.phone || '').replace(/^0/, '20');
+    if (waNumber) {
+      const waRow = document.getElementById('contact-whatsapp');
+      if (waRow) waRow.href = 'https://wa.me/' + waNumber;
+      const waTop = document.getElementById('social-whatsapp');
+      if (waTop) waTop.href = 'https://wa.me/' + waNumber;
+    }
+    // Call icon in the header
+    const callTop = document.getElementById('social-phone');
+    if (callTop && p.phone) callTop.href = 'tel:' + p.phone.replace(/^0/, '+20');
     document.getElementById('mail-direct-link').href = `mailto:${p.email}`;
   }
 
@@ -286,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
     screenDots.forEach((d) => d.classList.remove('show-label'));
     clearTimeout(dotLabelTimer);
     dot.classList.add('show-label');
-    dotLabelTimer = setTimeout(() => dot.classList.remove('show-label'), 2000);
+    dotLabelTimer = setTimeout(() => dot.classList.remove('show-label'), 1000);
   }
 
   // ─── Reveal on view (IntersectionObserver) ─────────────────────
@@ -488,6 +504,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // ─── Copy email ────────────────────────────────────────────────
   document.getElementById('copy-email-btn')?.addEventListener('click', function () {
     navigator.clipboard.writeText(D.profile.email).then(() => {
+      const orig = this.textContent;
+      this.textContent = 'COPIED!';
+      setTimeout(() => { this.textContent = orig; }, 2000);
+    });
+  });
+
+  // ─── Copy phone ────────────────────────────────────────────────
+  document.getElementById('copy-phone-btn')?.addEventListener('click', function () {
+    const num = (document.getElementById('contact-phone')?.textContent || '').trim();
+    navigator.clipboard.writeText(num).then(() => {
       const orig = this.textContent;
       this.textContent = 'COPIED!';
       setTimeout(() => { this.textContent = orig; }, 2000);
